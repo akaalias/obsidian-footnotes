@@ -1,0 +1,10 @@
+{
+	"id": "obsidian-footnotes",
+	"name": "Footnotes",
+	"version": "0.0.1",
+	"minAppVersion": "0.9.12",
+	"description": "Shortcut for adding footnotes",
+	"author": "Alexis Rondeau",
+	"authorUrl": "https://publish.obsidian.md/alexisrondeau",
+	"isDesktopOnly": false
+}
