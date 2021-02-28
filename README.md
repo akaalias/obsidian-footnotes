@@ -2,13 +2,13 @@
 
 Great idea by [jacob.4ristotle](https://forum.obsidian.md/u/jacob.4ristotle/summary) posted in the ["Footnote Shortcut"](https://forum.obsidian.md/t/footnote-shortcut/8872) thread.
 
-> **Use case or problem:**
+>markdown **Use case or problem:**
 > 
 > I use Obsidian to take school notes, write essays and so on, and I find myself needing to add frequent footnotes. Currently, to add a new footnote, I need to:
 > - scroll to the bottom to check how many footnotes I already have
 > - type [^n] in the body of the note, where n is the next number
 > - move to the end of the note, type [^n] again, and then add my citation. 
-
+> 
 > **Proposed solution:**
 > 
 > It would be convenient to have a shortcut to automate these steps. In particular, I envision that the shortcut would:
@@ -47,7 +47,7 @@ Customize this combination If you already have this hotkey set up or use a diffe
 #### Indices are not updated
 Inserting new footnote in-between two existing footnotes will insert the next numeric index (e.g. `1, 3, 2`). It will not update the indices according to their natural order (e.g. `1, 2, 3`). 
 
-```
+```markdown
 Example sentence[^1] with two▊ footnotes[^2] already.
   
 [^1]: Foo
@@ -94,28 +94,28 @@ Example sentence[^1] with two[^2] footnotes[^3] already.
 
 #### Edge Cases to consider ("What if...?")
 - New footnote is inserted before the first footnote 
-  ```
-  Some▊ sentence[^new] with existing note[^1]
+  ```markdown
+  Some sentence▊ with existing note[^1]
   
   [^1]: Details
   ```
 - Text has the same footnote at several places 
-  ```
-  Some sentence with existing note[^1] and the same[^new] footnote re-appears later[^1].
+  ```markdown
+  Some sentence with existing note[^1] and the same▊ footnote re-appears later[^1].
 
   
   [^1]: Details
   ```
 - Footnote details are spread across the text 
-  ```
+  ```markdown
   Some sentence with existing note[^1] some more text▊ 
   
   [^1]: Inline footnote details
   
-  Another text part[^new]
+  Another text part▊
   ```
 - The footnote details are multi-line on the bottom
-  ```
+  ```markdown
   Some sentence with existing note[^1] some more text▊ 
   
   [^1]: The details that
@@ -123,7 +123,7 @@ Example sentence[^1] with two[^2] footnotes[^3] already.
   Multiple lines
   ```
 - There are non-numeric footnotes in the text
-  ```
+  ```markdown
   Some sentence with existing note[^✝] some more text▊ 
   
   [^✝]: Details
