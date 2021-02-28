@@ -7,9 +7,15 @@ Great idea by [jacob.4ristotle](https://forum.obsidian.md/u/jacob.4ristotle/summ
 > * add `[^n]` at the insertion point 
 > * add `[^n]: ` to the end of the note, and move the insertion point there.
 
-That's what this does. 
+Hot-key: <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd>
 
-This plugin adds a new hot-key <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd> that when hit will insert a footnote with increased counter and move your cursor to the bottom of the file, add the other footnote pair and lets you type away...
+![Demo](https://github.com/akaalias/obsidian-footnotes/blob/master/demo.gif?raw=true)
+
+- Given my cursor is where I want a footnote to exist (e.g. `Foo bar baz▊`)
+- When I hit <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd>
+- Then a new footnote marker (e.g. `[^1]`) is inserted where my cursor was (e.g. `Foo bar baz[^1]`)
+- And a new footnote details marker (e.g. `[^1]: `) is inserted on the last line of the document
+- And my cursor is now placed at the end of the detail marker (e.g. `[^1]: ▊`) 
 
 ("6" because this is based on a US keyboard where the uptick character "^" is the shift-value of the same key. Customize hot-key as needed.)
 
