@@ -75,7 +75,7 @@ See "Automatically Re-Index Footnotes" below for a proposed feature
 Re-index and re-sort all footnotes when you insert a new one in-between one or more existing numbered footnotes:
 
 ```markdown
-Example sentence[^1] with two footnotes[^2] already.
+Example sentence[^1] with two▊ footnotes[^2] already.
   
 [^1]: Foo
 [^2]: Bar
