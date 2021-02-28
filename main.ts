@@ -1,6 +1,8 @@
 import {App, MarkdownView, Modal, Plugin} from 'obsidian';
 
 export default class MyPlugin extends Plugin {
+	private jumpingOffCursorPosition: CodeMirror.Position;
+
 	async onload() {
 		this.addCommand({
 			id: 'insert-footnote',
@@ -27,6 +29,18 @@ export default class MyPlugin extends Plugin {
 
 		let editor = doc;
 		let markdownText = mdView.data;
+
+		// check if we're in a footnote detail line ("[^1]: footnote")
+		// if so, jump cursor back to original line if we have a previous jumping-off point
+		let detailLineRegex = /\[\^(\d+)\]\:/;
+
+		const cursorPosition = editor.getCursor();
+		let lineText = editor.getLine(cursorPosition.line);
+		if(lineText.match(detailLineRegex) && this.jumpingOffCursorPosition != null) {
+			editor.setCursor(this.jumpingOffCursorPosition);
+			return;
+		}
+
 		let re = /\[\^(\d+)\]/gi;
 		let matches = markdownText.match(re);
 		let numbers: Array<number> = [];
@@ -45,8 +59,6 @@ export default class MyPlugin extends Plugin {
 			}
 		}
 
-		const cursorPosition = editor.getCursor();
-		let lineText = editor.getLine(cursorPosition.line);
 		let footNoteId = currentMax;
 		let footnoteMarker = `[^${footNoteId}]`;
 		let linePart1 = lineText.substr(0, cursorPosition.ch)
@@ -63,6 +75,7 @@ export default class MyPlugin extends Plugin {
 			editor.replaceRange(`[^${footNoteId}]: `, {line: doc.lineCount(), ch: 0})
 		}
 
+		this.jumpingOffCursorPosition = editor.getCursor();
 		editor.setCursor({line: doc.lineCount(), ch: 6});
 	}
 }

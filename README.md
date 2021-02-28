@@ -3,26 +3,9 @@
 This plugin for Obsidian gives you a new hotkey that...
 - Inserts a footnote marker (e.g. [^1]) with auto-incremented index in your text 
 - Adds the footnote detail marker (e.g. [^1]:) at the bottom of your text and 
-- Places your cursor so you can fill in the details quickly.
+- Places your cursor so you can fill in the details quickly
 
 ![Demo](https://github.com/akaalias/obsidian-footnotes/blob/master/demo.gif?raw=true)
-
-## Background
-This plugin is based on the great idea by [jacob.4ristotle](https://forum.obsidian.md/u/jacob.4ristotle/summary) posted in the ["Footnote Shortcut"](https://forum.obsidian.md/t/footnote-shortcut/8872) thread.
-
-> **Use case or problem:**
-> 
-> I use Obsidian to take school notes, write essays and so on, and I find myself needing to add frequent footnotes. Currently, to add a new footnote, I need to:
-> - scroll to the bottom to check how many footnotes I already have
-> - type [^n] in the body of the note, where n is the next number
-> - move to the end of the note, type [^n] again, and then add my citation. 
-> 
-> **Proposed solution:**
-> 
-> It would be convenient to have a shortcut to automate these steps. In particular, I envision that the shortcut would:
-> Using the smallest natural number n that has not yet been used for a footnote
-> - add `[^n]` at the insertion point
-> - add `[^n]: ` to the end of the note, and move the insertion point there.
 
 ## Default Hotkey: <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd>
 
@@ -46,6 +29,11 @@ Customize this combination If you already have this hotkey set up or use a diffe
 - Then a new footnote marker with the next numeric index (e.g. `[^2]`) is inserted where my cursor was (e.g. `Foo bar[^1] baz[^2]`)
 - And a new footnote details marker (e.g. `[^2]: `) is inserted on the last line of the document
 - And my cursor is now placed at the end of the detail marker (e.g. `[^2]: ▊`)
+### Scenario: Jumping back to where you created the footnote
+- Given I just created a footnote using the hotkey
+- And I'm on the footnote detail line (e.g. `[^1]: `)
+- When I hit the same hotkey (`Command-Shift-6`)
+- Then my cursor is placed back to where I created the footnote in my text (e.g. `[^1]`)
 
 ### Known Limitations or Untested Scenarios
 #### Indices are not updated
@@ -132,3 +120,20 @@ Example sentence[^1] with two[^2] footnotes[^3] already.
   
   [^✝]: Details
   ```
+
+## Background
+This plugin is based on the great idea by [jacob.4ristotle](https://forum.obsidian.md/u/jacob.4ristotle/summary) posted in the ["Footnote Shortcut"](https://forum.obsidian.md/t/footnote-shortcut/8872) thread.
+
+> **Use case or problem:**
+>
+> I use Obsidian to take school notes, write essays and so on, and I find myself needing to add frequent footnotes. Currently, to add a new footnote, I need to:
+> - scroll to the bottom to check how many footnotes I already have
+> - type [^n] in the body of the note, where n is the next number
+> - move to the end of the note, type [^n] again, and then add my citation.
+>
+> **Proposed solution:**
+>
+> It would be convenient to have a shortcut to automate these steps. In particular, I envision that the shortcut would:
+> Using the smallest natural number n that has not yet been used for a footnote
+> - add `[^n]` at the insertion point
+> - add `[^n]: ` to the end of the note, and move the insertion point there.
