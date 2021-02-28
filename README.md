@@ -1,13 +1,22 @@
 ## Obsidian Footnotes
 
-Great idea by [jacob.4ristotle](https://forum.obsidian.md/u/jacob.4ristotle/summary) posted in [Footnote Shortcut](https://forum.obsidian.md/t/footnote-shortcut/8872).
+Great idea by [jacob.4ristotle](https://forum.obsidian.md/u/jacob.4ristotle/summary) posted in the ["Footnote Shortcut"](https://forum.obsidian.md/t/footnote-shortcut/8872) thread.
 
+> **Use case or problem:**
+> 
+> I use Obsidian to take school notes, write essays and so on, and I find myself needing to add frequent footnotes. Currently, to add a new footnote, I need to:
+> - scroll to the bottom to check how many footnotes I already have
+> - type [^n] in the body of the note, where n is the next number
+> - move to the end of the note, type [^n] again, and then add my citation. 
+
+> **Proposed solution:**
+> 
 > It would be convenient to have a shortcut to automate these steps. In particular, I envision that the shortcut would:
-> using the smallest natural number n that has not yet been used for a footnote, 
-> * add `[^n]` at the insertion point 
-> * add `[^n]: ` to the end of the note, and move the insertion point there.
+> Using the smallest natural number n that has not yet been used for a footnote
+> - add `[^n]` at the insertion point
+> - add `[^n]: ` to the end of the note, and move the insertion point there.
 
-## Demo
+## Plugin Solution Demo
 
 ![Demo](https://github.com/akaalias/obsidian-footnotes/blob/master/demo.gif?raw=true)
 
