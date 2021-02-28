@@ -1,8 +1,16 @@
-## Obsidian Footnotes
+## Obsidian Footnotes Plugin
 
-Great idea by [jacob.4ristotle](https://forum.obsidian.md/u/jacob.4ristotle/summary) posted in the ["Footnote Shortcut"](https://forum.obsidian.md/t/footnote-shortcut/8872) thread.
+This plugin for Obsidian gives you a new hotkey that...
+- Inserts a footnote marker (e.g. [^1]) with auto-incremented index in your text 
+- Adds the footnote detail marker (e.g. [^1]:) at the bottom of your text and 
+- Places your cursor so you can fill in the details quickly.
 
->markdown **Use case or problem:**
+![Demo](https://github.com/akaalias/obsidian-footnotes/blob/master/demo.gif?raw=true)
+
+## Background
+This plugin is based on the great idea by [jacob.4ristotle](https://forum.obsidian.md/u/jacob.4ristotle/summary) posted in the ["Footnote Shortcut"](https://forum.obsidian.md/t/footnote-shortcut/8872) thread.
+
+> **Use case or problem:**
 > 
 > I use Obsidian to take school notes, write essays and so on, and I find myself needing to add frequent footnotes. Currently, to add a new footnote, I need to:
 > - scroll to the bottom to check how many footnotes I already have
@@ -15,10 +23,6 @@ Great idea by [jacob.4ristotle](https://forum.obsidian.md/u/jacob.4ristotle/summ
 > Using the smallest natural number n that has not yet been used for a footnote
 > - add `[^n]` at the insertion point
 > - add `[^n]: ` to the end of the note, and move the insertion point there.
-
-## Plugin Solution Demo
-
-![Demo](https://github.com/akaalias/obsidian-footnotes/blob/master/demo.gif?raw=true)
 
 ## Default Hotkey: <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd>
 
