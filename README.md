@@ -129,7 +129,7 @@ Jumping between footnote marker (`[^1]`) and footnote details (`[^1]: My details
 - Marker -> Details (Pending)
 - Details -> Marker (Available in release 0.0.3)
 
-When I'm on an existing footnote marker with my cursor, using the hotkey should place my cursor details.
+When I'm on an existing footnote marker with my cursor, using the hotkey should place my cursor at the footnote details.
 
 #### Base Scenario
 ```markdown
