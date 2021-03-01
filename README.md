@@ -7,7 +7,7 @@ This plugin for Obsidian gives you a new hotkey that...
 - Places your cursor so you can fill in the details quickly
 - Allows you to JUMP BACK from the footnote detail (e.g. `[^1]: My details`) to the footnote in your text (e.g. `[^1]`) 
 
-![Demo](https://github.com/akaalias/obsidian-footnotes/blob/master/demo.gif?raw=true)
+![Overview](https://github.com/akaalias/obsidian-footnotes/blob/master/basic.gif?raw=true)
 
 ## Default Hotkey: <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd>
 
@@ -35,8 +35,6 @@ Customize this combination If you already have this hotkey set up or use a diffe
 - Given I'm on a footnote detail line (e.g. `[^1]: ▊`)
 - When I hit the same hotkey (`Command-Shift-6`)
 - Then my cursor is placed right after the *first* occurence of this footnote in my text (e.g. `[^1]▊`)
-
-![Jump](https://github.com/akaalias/obsidian-footnotes/blob/master/jump.gif?raw=true)
 
 ### Known Limitations or Untested Scenarios
 #### Indices are not updated
