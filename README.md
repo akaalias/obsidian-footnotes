@@ -30,10 +30,11 @@ Customize this combination If you already have this hotkey set up or use a diffe
 - And a new footnote details marker (e.g. `[^2]: `) is inserted on the last line of the document
 - And my cursor is now placed at the end of the detail marker (e.g. `[^2]: ▊`)
 ### Scenario: Jumping back to where you created the footnote
-- Given I just created a footnote using the hotkey
-- And I'm on the footnote detail line (e.g. `[^1]: `)
+- Given I'm on a footnote detail line (e.g. `[^1]: ▊`)
 - When I hit the same hotkey (`Command-Shift-6`)
-- Then my cursor is placed back to where I created the footnote in my text (e.g. `[^1]`)
+- Then my cursor is placed right after the *first* occurence of this footnote in my text (e.g. `[^1]▊`)
+
+![Jump](https://github.com/akaalias/obsidian-footnotes/blob/master/jump.gif?raw=true)
 
 ### Known Limitations or Untested Scenarios
 #### Indices are not updated
