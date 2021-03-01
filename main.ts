@@ -33,12 +33,26 @@ export default class MyPlugin extends Plugin {
 		// check if we're in a footnote detail line ("[^1]: footnote")
 		// if so, jump cursor back to original line if we have a previous jumping-off point
 		let detailLineRegex = /\[\^(\d+)\]\:/;
-
 		const cursorPosition = editor.getCursor();
 		let lineText = editor.getLine(cursorPosition.line);
-		if(lineText.match(detailLineRegex) && this.jumpingOffCursorPosition != null) {
-			editor.setCursor(this.jumpingOffCursorPosition);
-			return;
+		let match = lineText.match(detailLineRegex)
+		if(match) {
+			let s = match[0]
+			let index = s.replace("[^", "");
+			index = index.replace("]:", "");
+			let footnote = s.replace(":", "");
+
+			let returnLineIndex = cursorPosition.line;
+			// find the first line where this footnote exists in the text
+			for(var i = 0; i < doc.lineCount(); i++) {
+				let scanLine = doc.getLine(i);
+				if(scanLine.contains(footnote)) {
+					let cursorLocationIndex = scanLine.indexOf(footnote);
+					returnLineIndex = i;
+					editor.setCursor({line: returnLineIndex, ch: cursorLocationIndex + footnote.length});
+					return;
+				}
+			}
 		}
 
 		let re = /\[\^(\d+)\]/gi;
