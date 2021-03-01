@@ -69,6 +69,7 @@ Example sentence[^1] with two▊ footnotes[^2] already.
 [^1]: Foo
 [^2]: Bar
 ```
+#### Base Scenario
 - Given there are two footnotes already
 - When I enter a new footnote in-between those two
 - Then the NEW footnote gets the index "2" 
@@ -86,20 +87,20 @@ Example sentence[^1] with two[^2] footnotes[^3] already.
 ```
 
 #### Edge Cases to consider ("What if...?")
-- New footnote is inserted before the first footnote 
+##### What if... new footnote is inserted before the first footnote?
   ```markdown
   Some sentence▊ with existing note[^1]
   
   [^1]: Details
   ```
-- Text has the same footnote at several places 
+##### What if... text has the same footnote at several places?
   ```markdown
   Some sentence with existing note[^1] and the same▊ footnote re-appears later[^1].
 
   
   [^1]: Details
   ```
-- Footnote details are spread across the text 
+##### What if...Footnote details are spread across the text?
   ```markdown
   Some sentence with existing note[^1] some more text▊ 
   
@@ -107,7 +108,7 @@ Example sentence[^1] with two[^2] footnotes[^3] already.
   
   Another text part▊
   ```
-- The footnote details are multi-line on the bottom
+##### What if... the footnote details are multi-line on the bottom?
   ```markdown
   Some sentence with existing note[^1] some more text▊ 
   
@@ -115,12 +116,47 @@ Example sentence[^1] with two[^2] footnotes[^3] already.
   Span across
   Multiple lines
   ```
-- There are non-numeric footnotes in the text
+##### What if... there are non-numeric footnotes in the text?
   ```markdown
   Some sentence with existing note[^✝] some more text▊ 
   
   [^✝]: Details
   ```
+
+### Improved Quick Navigation
+Jumping between footnote marker (`[^1]`) and footnote details (`[^1]: My details`) should work both ways: 
+
+- Marker -> Details (Pending)
+- Details -> Marker (Available in release 0.0.3)
+
+When I'm on an existing footnote marker with my cursor, using the hotkey should place my cursor details.
+
+#### Base Scenario
+```markdown
+Example sentence[^1▊] with footnote marker.
+
+[^1]: Foo
+```
+
+- Given my cursor is INSIDE an existing footnote marker
+- When I hit <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd>
+- Then my cursor is placed at the beginning of the footnote details
+
+```markdown
+Example sentence[^1] with footnote marker.
+
+[^1]: ▊Foo
+```
+
+#### Edge Cases to consider ("What if...?")
+##### What if... the cursor is BEFORE footnote marker?
+```markdown
+Example sentence▊[^1] with footnote marker.
+```
+##### What if... the cursor is NEXT to footnote marker?
+```markdown
+Example sentence[^1]▊ with footnote marker.
+```
 
 ## Background
 This plugin is based on the great idea by [jacob.4ristotle](https://forum.obsidian.md/u/jacob.4ristotle/summary) posted in the ["Footnote Shortcut"](https://forum.obsidian.md/t/footnote-shortcut/8872) thread.
