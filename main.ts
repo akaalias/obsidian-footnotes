@@ -1,4 +1,4 @@
-import {App, MarkdownView, Modal, Plugin} from 'obsidian';
+import {App, MarkdownView, Modal, Plugin, Workspace} from 'obsidian';
 
 export default class MyPlugin extends Plugin {
 	private jumpingOffCursorPosition: CodeMirror.Position;
@@ -20,8 +20,9 @@ export default class MyPlugin extends Plugin {
 	}
 
 	insertFootnote(checking: boolean) {
-		let leaf = this.app.workspace.activeLeaf;
-		const mdView = leaf.view as MarkdownView;
+		const mdView = this.app.workspace.getActiveViewOfType(MarkdownView);
+
+		if(!mdView) { return false}
 
 		if(mdView.sourceMode == undefined) return false;
 
