@@ -43,7 +43,7 @@ export default class MyPlugin extends Plugin {
 
 			let returnLineIndex = cursorPosition.line;
 			// find the first line where this footnote exists in the text
-			for(var i = 0; i < doc.lineCount(); i++) {
+			for(let i = 0; i < doc.lineCount(); i++) {
 				let scanLine = doc.getLine(i);
 				if(scanLine.contains(footnote)) {
 					let cursorLocationIndex = scanLine.indexOf(footnote);
@@ -60,7 +60,7 @@ export default class MyPlugin extends Plugin {
 		let currentMax = 1;
 
 		if(matches != null) {
-			for(var i = 0; i <= matches.length - 1; i++){
+			for(let i = 0; i <= matches.length - 1; i++){
 				let match = matches[i];
 				match = match.replace("[^", "");
 				match = match.replace("]", "");
@@ -82,13 +82,15 @@ export default class MyPlugin extends Plugin {
 
 		let lastLine = editor.getLine(doc.lineCount() - 1);
 
+		let footnoteDetail = `[^${footNoteId}]: `;
+
 		if(lastLine.length > 0) {
-			editor.replaceRange(`\n[^${footNoteId}]: `, {line: doc.lineCount(), ch: 0})
+			editor.replaceRange("\n" + footnoteDetail, {line: doc.lineCount(), ch: 0})
 		} else {
-			editor.replaceRange(`[^${footNoteId}]: `, {line: doc.lineCount(), ch: 0})
+			editor.replaceRange(footnoteDetail, {line: doc.lineCount(), ch: 0})
 		}
 
 		this.jumpingOffCursorPosition = editor.getCursor();
-		editor.setCursor({line: doc.lineCount(), ch: 6});
+		editor.setCursor({line: doc.lineCount(), ch: footnoteDetail.length});
 	}
 }
