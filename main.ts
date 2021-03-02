@@ -7,8 +7,13 @@ export default class MyPlugin extends Plugin {
 		this.addCommand({
 			id: 'insert-footnote',
 			name: 'Insert Footnote',
-			callback: () => this.insertFootnote()
-			,
+			checkCallback: (checking: boolean) => {
+				if (checking) {
+					return !!this.app.workspace.getActiveViewOfType(MarkdownView);
+				}
+
+				this.insertFootnote();
+			},
 			hotkeys: [
 				{
 					modifiers: ["Mod", "Shift"],
