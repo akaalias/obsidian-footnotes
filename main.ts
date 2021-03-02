@@ -16,7 +16,7 @@ export default class MyPlugin extends Plugin {
 			},
 			hotkeys: [
 				{
-					modifiers: ["Mod", "Shift"],
+					modifiers: ["Command", "Shift"],
 					key: "6",
 				}]
 		});
