@@ -8,17 +8,9 @@ export default class MyPlugin extends Plugin {
 			id: 'insert-footnote',
 			name: 'Insert Footnote',
 			checkCallback: (checking: boolean) => {
-				if (checking) {
-					return !!this.app.workspace.getActiveViewOfType(MarkdownView);
-				}
-
+				if (checking) return !!this.app.workspace.getActiveViewOfType(MarkdownView);
 				this.insertFootnote();
-			},
-			hotkeys: [
-				{
-					modifiers: ["Command", "Shift"],
-					key: "6",
-				}]
+			}
 		});
 	}
 
@@ -35,7 +27,7 @@ export default class MyPlugin extends Plugin {
 		let markdownText = mdView.data;
 
 		// check if we're in a footnote detail line ("[^1]: footnote")
-		// if so, jump cursor back to original line if we have a previous jumping-off point
+		// if so, jump cursor back to the footnote in the text
 		let detailLineRegex = /\[\^(\d+)\]\:/;
 		const cursorPosition = editor.getCursor();
 		let lineText = editor.getLine(cursorPosition.line);
@@ -47,7 +39,7 @@ export default class MyPlugin extends Plugin {
 			let footnote = s.replace(":", "");
 
 			let returnLineIndex = cursorPosition.line;
-			// find the first line where this footnote exists in the text
+			// find the FIRST OCCURENCE where this footnote exists in the text
 			for(let i = 0; i < doc.lineCount(); i++) {
 				let scanLine = doc.getLine(i);
 				if(scanLine.contains(footnote)) {

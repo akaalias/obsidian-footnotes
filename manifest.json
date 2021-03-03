@@ -1,9 +1,9 @@
 {
 	"id": "obsidian-footnotes",
 	"name": "Footnote Shortcut",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"minAppVersion": "0.9.12",
-	"description": "Insert and write a new footnote faster",
+	"description": "Insert and write footnotes faster",
 	"author": "Alexis Rondeau",
 	"authorUrl": "https://publish.obsidian.md/alexisrondeau",
 	"isDesktopOnly": false
