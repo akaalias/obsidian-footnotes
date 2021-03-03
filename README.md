@@ -1,6 +1,6 @@
 ## Obsidian Footnotes Plugin
 
-This plugin for Obsidian gives you a new hotkey that...
+This plugin for Obsidian gives you a new customizable hotkey that...
 
 - Inserts a footnote marker (e.g. `[^1]`) with auto-incremented index in your text 
 - Adds the footnote detail (e.g. `[^1]: `) at the bottom of your text and 
@@ -9,31 +9,33 @@ This plugin for Obsidian gives you a new hotkey that...
 
 ![Overview](https://github.com/akaalias/obsidian-footnotes/blob/master/basic.gif?raw=true)
 
-## Default Hotkey: <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd>
+## IMPORTANT: You must to set up your footnote hotkey
 
-"6" because this is based on a US keyboard where the uptick character "^" is the shift-value of the same key.
+After installing and activating this plugin, you still have to SET UP your hotkey. This is easy and quick:
+
+`Settings -> Hotkeys -> Search for "Footnote" -> Customize Command -> Your preferred hotkey`
+
+I personally use <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd> because "6" on a US keyboard is where the uptick/footnote character "^" is.
 
 ![Hotkey](https://github.com/akaalias/obsidian-footnotes/blob/master/hotkey.png?raw=true)
-
-Customize this combination If you already have this hotkey set up or use a different keyboard layout.
 
 ## Default Feature Details
 ### Scenario: No previous numeric (e.g. "[^1]") footnotes exist:
 - Given my cursor is where I want a footnote to exist (e.g. `Foo bar baz▊`)
-- When I hit <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd>
 - Then a new footnote marker (e.g. `[^1]`) is inserted where my cursor was (e.g. `Foo bar baz[^1]`)
+- When I hit `my footnote hotkey`
 - And a new footnote details marker (e.g. `[^1]: `) is inserted on the last line of the document
 - And my cursor is now placed at the end of the detail marker (e.g. `[^1]: ▊`)
 ### Scenario: Previous numeric (e.g. "[^1]") footnotes exist:
 - Given there is one or more numeric footnotes in my text 
 - And my cursor is where I want a footnote to exist (e.g. `Foo bar[^1] baz▊`)
-- When I hit <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd>
+- When I hit `my footnote hotkey`
 - Then a new footnote marker with the next numeric index (e.g. `[^2]`) is inserted where my cursor was (e.g. `Foo bar[^1] baz[^2]`)
 - And a new footnote details marker (e.g. `[^2]: `) is inserted on the last line of the document
 - And my cursor is now placed at the end of the detail marker (e.g. `[^2]: ▊`)
 ### Scenario: Jumping back to where you created the footnote
 - Given I'm on a footnote detail line (e.g. `[^1]: ▊`)
-- When I hit the same hotkey (`Command-Shift-6`)
+- When I hit `my footnote hotkey`
 - Then my cursor is placed right after the *first* occurence of this footnote in my text (e.g. `[^1]▊`)
 
 ### Known Limitations or Untested Scenarios
@@ -139,7 +141,7 @@ Example sentence[^1▊] with footnote marker.
 ```
 
 - Given my cursor is INSIDE an existing footnote marker
-- When I hit <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd>
+- When I hit `my footnote hotkey`
 - Then my cursor is placed at the beginning of the footnote details
 
 ```markdown
