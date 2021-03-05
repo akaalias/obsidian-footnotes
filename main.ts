@@ -22,15 +22,16 @@ export default class MyPlugin extends Plugin {
 		if(mdView.sourceMode == undefined) return false;
 
 		const doc = mdView.sourceMode.cmEditor;
-
 		let editor = doc;
 		let markdownText = mdView.data;
 
-		// check if we're in a footnote detail line ("[^1]: footnote")
-		// if so, jump cursor back to the footnote in the text
-		let detailLineRegex = /\[\^(\d+)\]\:/;
 		const cursorPosition = editor.getCursor();
 		let lineText = editor.getLine(cursorPosition.line);
+
+		// check if we're in a footnote detail line ("[^1]: footnote")
+		// if so, jump cursor back to the footnote in the text
+		// https://github.com/akaalias/obsidian-footnotes#improved-quick-navigation
+		let detailLineRegex = /\[\^(\d+)\]\:/;
 		let match = lineText.match(detailLineRegex)
 		if(match) {
 			let s = match[0]
@@ -51,6 +52,66 @@ export default class MyPlugin extends Plugin {
 			}
 		}
 
+		// Jump cursor TO detail marker
+		// check if the cursor is inside or left or right of a footnote in a line
+		// if so, jump cursor to the footnote detail line
+		// https://github.com/akaalias/obsidian-footnotes#improved-quick-navigation
+
+		// does this line have a footnote marker?
+		// does the cursor overlap with one of them?
+		// if so, which one?
+		// find this footnote marker's detail line
+		// place cursor there
+		let reOnlyMarkers = /\[\^(\d+)\]/gi;
+		let reOnlyMarkersMatches = lineText.match(reOnlyMarkers);
+
+		let markerTarget = null;
+
+		if(reOnlyMarkersMatches) {
+			for(let i = 0; i <= reOnlyMarkersMatches.length; i++) {
+				let marker = reOnlyMarkersMatches[i];
+				if(marker != undefined) {
+					let indexOfMarkerInLine = lineText.indexOf(marker);
+					console.log(indexOfMarkerInLine);
+					if(cursorPosition.ch >= indexOfMarkerInLine && cursorPosition.ch <= indexOfMarkerInLine + marker.length) {
+						markerTarget = marker;
+						break;
+					}
+				}
+			}
+		}
+
+		if(markerTarget != null) {
+			console.log("Let's continue moving the cursor to where the marker detail is...");
+			// extract index
+			let numericalRe = /(\d+)/
+			let match = markerTarget.match(numericalRe);
+			if(match) {
+				let indexString = match[0];
+				let markerIndex = Number(indexString);
+				console.log(markerIndex);
+
+				// find the first line with this detail marker index in it.
+				for(let i = 0; i < editor.lineCount(); i++) {
+					let detailLineRegex = /\[\^(\d+)\]\:/;
+					let theLine = editor.getLine(i);
+					let lineMatch = theLine.match(detailLineRegex);
+					if(lineMatch) {
+						// compare to the index
+						let indexMatch = lineMatch[1];
+						let indexMatchNumber = Number(indexMatch);
+
+						if(indexMatchNumber == markerIndex){
+							editor.setCursor({line: i, ch: lineMatch[0].length});
+							break;
+						}
+					}
+				}
+			}
+			return;
+		}
+
+		// create new footnote with the next numerical index
 		let re = /\[\^(\d+)\]/gi;
 		let matches = markdownText.match(re);
 		let numbers: Array<number> = [];
