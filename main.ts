@@ -1,4 +1,4 @@
-import {App, MarkdownView, Modal, Plugin, Workspace} from 'obsidian';
+import { MarkdownView, Plugin } from 'obsidian';
 
 export default class MyPlugin extends Plugin {
 
