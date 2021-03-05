@@ -1,11 +1,12 @@
 ## Obsidian Footnotes Plugin
 
-This plugin for Obsidian gives you a new customizable hotkey that...
+This hotkey lets you:
 
-- Inserts a footnote marker (e.g. `[^1]`) with auto-incremented index in your text 
-- Adds the footnote detail (e.g. `[^1]: `) at the bottom of your text and 
-- Places your cursor so you can fill in the details quickly
-- Allows you to JUMP BACK from the footnote detail (e.g. `[^1]: My details`) to the footnote in your text (e.g. `[^1]`) 
+- Insert a new footnote marker (e.g. `[^1]`) with auto-incremented index in your text 
+    - Adds the footnote detail (e.g. `[^1]: `) at the bottom of your text 
+    - Places your cursor so you can fill in the details quickly
+- Jump from your footnote to the footnote detail
+- Jump from your footnote detail to the footnote 
 
 ![Overview](https://github.com/akaalias/obsidian-footnotes/blob/master/basic.gif?raw=true)
 

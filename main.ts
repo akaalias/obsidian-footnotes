@@ -10,7 +10,7 @@ export default class MyPlugin extends Plugin {
 	async onload() {
 		this.addCommand({
 			id: 'insert-footnote',
-			name: 'Insert Footnote',
+			name: 'Insert and Navigate Footnote',
 			checkCallback: (checking: boolean) => {
 				if (checking) return !!this.app.workspace.getActiveViewOfType(MarkdownView);
 				this.insertFootnote();
