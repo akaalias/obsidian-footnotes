@@ -82,7 +82,6 @@ export default class MyPlugin extends Plugin {
 				let marker = reOnlyMarkersMatches[i];
 				if (marker != undefined) {
 					let indexOfMarkerInLine = lineText.indexOf(marker);
-					console.log(indexOfMarkerInLine);
 					if (cursorPosition.ch >= indexOfMarkerInLine && cursorPosition.ch <= indexOfMarkerInLine + marker.length) {
 						markerTarget = marker;
 						break;
@@ -92,13 +91,11 @@ export default class MyPlugin extends Plugin {
 		}
 
 		if (markerTarget != null) {
-			console.log("Let's continue moving the cursor to where the marker detail is...");
 			// extract index
 			let match = markerTarget.match(this.numericalRe);
 			if (match) {
 				let indexString = match[0];
 				let markerIndex = Number(indexString);
-				console.log(markerIndex);
 
 				// find the first line with this detail marker index in it.
 				for (let i = 0; i < doc.lineCount(); i++) {
