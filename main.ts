@@ -1,4 +1,5 @@
 import { MarkdownView, Plugin } from 'obsidian';
+import * as _ from "lodash";
 
 export default class MyPlugin extends Plugin {
 
@@ -119,10 +120,11 @@ export default class MyPlugin extends Plugin {
 	private shouldCreateNewFootnote(lineText: string, cursorPosition: CodeMirror.Position, doc: CodeMirror.Editor, markdownText: string) {
 
 		// get all footnotes, including markers
-		let allFootnotesRegex = /\^\[.*\]|\[\^\d+\]\:?/ig;
-		let newMarkerIndex = 0;
+		let allFootnotesRegex = /\[\^\d+\]\:?/ig;
 		let footnotesByLine = [];
-		let footnotesInOrder = [];
+
+		let footnotesBeforeCursor = [];
+		let footnotesAfterCursor = [];
 
 		for (let i = 0; i < doc.lineCount(); i++) {
 			let theLine = doc.getLine(i);
@@ -130,30 +132,33 @@ export default class MyPlugin extends Plugin {
 			let lineMatches = [...theLine.matchAll(allFootnotesRegex)];
 			if (lineMatches.length != 0) {
 				for (let j = 0; j < lineMatches.length; j++) {
-					console.log(lineMatches[j]);
 					let type = "normal";
 					if(lineMatches[j][0].match(/\[\^.*\]\:/)) type = "detail";
 					if(lineMatches[j][0].match(/\^\[.*\]/)) type = "inline";
 					let footnote = {line: i, text: lineMatches[j][0], type: type, index: lineMatches[j].index}
 
-					footnotesByLine[i].push(footnote);
-					footnotesInOrder.push(footnote);
+					if(cursorPosition.line > i) footnotesBeforeCursor.push(footnote);
+					if(cursorPosition.line == i) {
+						if(cursorPosition.ch > footnote.index) footnotesBeforeCursor.push(footnote);
+						if(cursorPosition.ch < footnote.index) footnotesAfterCursor.push(footnote);
+					}
+					if(cursorPosition.line < i) footnotesAfterCursor.push(footnote);
 				}
 			}
 		}
 
-		let footnotesInOrderOnlyMarkers = footnotesInOrder.filter(item => item.type != "detail");
-		let linesWithFootnotes = footnotesByLine.filter(item => item.length != 0);
-		let linesWithOnlyMarkers = linesWithFootnotes.filter(item => item.some(match => match.type != "detail"));
+		const footnotesBeforeCursorMarkersOnly = footnotesBeforeCursor.filter(item => item.type != "detail");
+		const footnotesBeforeCursorMarkersOnlyUnique = _.uniqBy(footnotesBeforeCursorMarkersOnly, 'text');
+		const footnotesAfterCursorMarkersOnly = footnotesAfterCursor.filter(item => item.type != "detail");
 
-		if(footnotesInOrderOnlyMarkers.length > 0) {
-			newMarkerIndex = footnotesInOrderOnlyMarkers.length + 1;
-		} else {
-			newMarkerIndex = 1;
-		}
 
-		let footNoteId = newMarkerIndex;
-		let footnoteMarker = `[^${footNoteId}]`;
+		console.log("unique before:");
+		console.log(footnotesBeforeCursorMarkersOnlyUnique);
+
+		let newMarkerIndex = footnotesBeforeCursorMarkersOnlyUnique.length + 1;
+
+		// finally set the footnote and move the cursor
+		let footnoteMarker = `[^${newMarkerIndex}]`;
 		let linePart1 = lineText.substr(0, cursorPosition.ch)
 		let linePart2 = lineText.substr(cursorPosition.ch);
 		let newLine = linePart1 + footnoteMarker + linePart2
@@ -162,7 +167,7 @@ export default class MyPlugin extends Plugin {
 
 		let lastLine = doc.getLine(doc.lineCount() - 1);
 
-		let footnoteDetail = `[^${footNoteId}]: `;
+		let footnoteDetail = `[^${newMarkerIndex}]: `;
 
 		if (lastLine.length > 0) {
 			doc.replaceRange("\n" + footnoteDetail, {line: doc.lineCount(), ch: 0})
@@ -171,5 +176,29 @@ export default class MyPlugin extends Plugin {
 		}
 
 		doc.setCursor({line: doc.lineCount(), ch: footnoteDetail.length});
+
+
+
+		// these need to be updated
+		for(var i = 0; i < footnotesAfterCursorMarkersOnly.length; i++) {
+
+			let footnote = footnotesAfterCursorMarkersOnly[i];
+			let theLine = doc.getLine(footnote.line);
+
+			let match = footnote.text.match(this.numericalRe);
+			if (match) {
+				let indexString = match[0];
+				let markerIndex = Number(indexString);
+				let incrementIndex = markerIndex + 1;
+
+				console.log("Reindexing..." + markerIndex);
+
+				let newMarker = "[^" + incrementIndex +"]";
+
+				let theNewLine = theLine.replace(footnote.text, newMarker);
+
+				doc.replaceRange(newMarker, {line: footnote.line, ch: footnote.index + footnoteMarker.length}, {line: footnote.line, ch: footnote.index + footnoteMarker.length + newMarker.length})
+			}
+		}
 	}
 }
