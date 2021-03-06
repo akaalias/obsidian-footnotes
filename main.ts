@@ -117,25 +117,42 @@ export default class MyPlugin extends Plugin {
 	}
 
 	private shouldCreateNewFootnote(lineText: string, cursorPosition: CodeMirror.Position, doc: CodeMirror.Editor, markdownText: string) {
-		// create new footnote with the next numerical index
-		let matches = markdownText.match(this.reOnlyMarkers);
-		let numbers: Array<number> = [];
-		let currentMax = 1;
 
-		if (matches != null) {
-			for (let i = 0; i <= matches.length - 1; i++) {
-				let match = matches[i];
-				match = match.replace("[^", "");
-				match = match.replace("]", "");
-				let matchNumber = Number(match);
-				numbers[i] = matchNumber;
-				if (matchNumber + 1 > currentMax) {
-					currentMax = matchNumber + 1;
+		// get all footnotes, including markers
+		let allFootnotesRegex = /\^\[.*\]|\[\^\d+\]\:?/ig;
+		let newMarkerIndex = 0;
+		let footnotesByLine = [];
+		let footnotesInOrder = [];
+
+		for (let i = 0; i < doc.lineCount(); i++) {
+			let theLine = doc.getLine(i);
+			footnotesByLine[i] = [];
+			let lineMatches = [...theLine.matchAll(allFootnotesRegex)];
+			if (lineMatches.length != 0) {
+				for (let j = 0; j < lineMatches.length; j++) {
+					console.log(lineMatches[j]);
+					let type = "normal";
+					if(lineMatches[j][0].match(/\[\^.*\]\:/)) type = "detail";
+					if(lineMatches[j][0].match(/\^\[.*\]/)) type = "inline";
+					let footnote = {line: i, text: lineMatches[j][0], type: type, index: lineMatches[j].index}
+
+					footnotesByLine[i].push(footnote);
+					footnotesInOrder.push(footnote);
 				}
 			}
 		}
 
-		let footNoteId = currentMax;
+		let footnotesInOrderOnlyMarkers = footnotesInOrder.filter(item => item.type != "detail");
+		let linesWithFootnotes = footnotesByLine.filter(item => item.length != 0);
+		let linesWithOnlyMarkers = linesWithFootnotes.filter(item => item.some(match => match.type != "detail"));
+
+		if(footnotesInOrderOnlyMarkers.length > 0) {
+			newMarkerIndex = footnotesInOrderOnlyMarkers.length + 1;
+		} else {
+			newMarkerIndex = 1;
+		}
+
+		let footNoteId = newMarkerIndex;
 		let footnoteMarker = `[^${footNoteId}]`;
 		let linePart1 = lineText.substr(0, cursorPosition.ch)
 		let linePart2 = lineText.substr(cursorPosition.ch);
