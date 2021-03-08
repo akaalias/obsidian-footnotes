@@ -1,5 +1,4 @@
 import { MarkdownView, Plugin } from 'obsidian';
-import * as _ from "lodash";
 
 export default class MyPlugin extends Plugin {
 
@@ -118,47 +117,26 @@ export default class MyPlugin extends Plugin {
 	}
 
 	private shouldCreateNewFootnote(lineText: string, cursorPosition: CodeMirror.Position, doc: CodeMirror.Editor, markdownText: string) {
+		// create new footnote with the next numerical index
+		let matches = markdownText.match(this.reOnlyMarkers);
+		let numbers: Array<number> = [];
+		let currentMax = 1;
 
-		// get all footnotes, including markers
-		let allFootnotesRegex = /\[\^\d+\]\:?/ig;
-		let footnotesByLine = [];
-
-		let footnotesBeforeCursor = [];
-		let footnotesAfterCursor = [];
-
-		for (let i = 0; i < doc.lineCount(); i++) {
-			let theLine = doc.getLine(i);
-			footnotesByLine[i] = [];
-			let lineMatches = [...theLine.matchAll(allFootnotesRegex)];
-			if (lineMatches.length != 0) {
-				for (let j = 0; j < lineMatches.length; j++) {
-					let type = "normal";
-					if(lineMatches[j][0].match(/\[\^.*\]\:/)) type = "detail";
-					if(lineMatches[j][0].match(/\^\[.*\]/)) type = "inline";
-					let footnote = {line: i, text: lineMatches[j][0], type: type, index: lineMatches[j].index}
-
-					if(cursorPosition.line > i) footnotesBeforeCursor.push(footnote);
-					if(cursorPosition.line == i) {
-						if(cursorPosition.ch > footnote.index) footnotesBeforeCursor.push(footnote);
-						if(cursorPosition.ch < footnote.index) footnotesAfterCursor.push(footnote);
-					}
-					if(cursorPosition.line < i) footnotesAfterCursor.push(footnote);
+		if (matches != null) {
+			for (let i = 0; i <= matches.length - 1; i++) {
+				let match = matches[i];
+				match = match.replace("[^", "");
+				match = match.replace("]", "");
+				let matchNumber = Number(match);
+				numbers[i] = matchNumber;
+				if (matchNumber + 1 > currentMax) {
+					currentMax = matchNumber + 1;
 				}
 			}
 		}
 
-		const footnotesBeforeCursorMarkersOnly = footnotesBeforeCursor.filter(item => item.type != "detail");
-		const footnotesBeforeCursorMarkersOnlyUnique = _.uniqBy(footnotesBeforeCursorMarkersOnly, 'text');
-		const footnotesAfterCursorMarkersOnly = footnotesAfterCursor.filter(item => item.type != "detail");
-
-
-		console.log("unique before:");
-		console.log(footnotesBeforeCursorMarkersOnlyUnique);
-
-		let newMarkerIndex = footnotesBeforeCursorMarkersOnlyUnique.length + 1;
-
-		// finally set the footnote and move the cursor
-		let footnoteMarker = `[^${newMarkerIndex}]`;
+		let footNoteId = currentMax;
+		let footnoteMarker = `[^${footNoteId}]`;
 		let linePart1 = lineText.substr(0, cursorPosition.ch)
 		let linePart2 = lineText.substr(cursorPosition.ch);
 		let newLine = linePart1 + footnoteMarker + linePart2
@@ -167,7 +145,7 @@ export default class MyPlugin extends Plugin {
 
 		let lastLine = doc.getLine(doc.lineCount() - 1);
 
-		let footnoteDetail = `[^${newMarkerIndex}]: `;
+		let footnoteDetail = `[^${footNoteId}]: `;
 
 		if (lastLine.length > 0) {
 			doc.replaceRange("\n" + footnoteDetail, {line: doc.lineCount(), ch: 0})
@@ -176,24 +154,5 @@ export default class MyPlugin extends Plugin {
 		}
 
 		doc.setCursor({line: doc.lineCount(), ch: footnoteDetail.length});
-
-		// Now let's go for updating...
-		// these need to be updated
-		for(var i = 0; i <= footnotesAfterCursorMarkersOnly.length; i++) {
-
-			let footnote = footnotesAfterCursorMarkersOnly[i];
-			let theLine = doc.getLine(footnote.line);
-
-			let match = footnote.text.match(this.numericalRe);
-			if (match) {
-				let indexString = match[0];
-				let markerIndex = Number(indexString);
-				let incrementIndex = markerIndex + 1;
-
-				let newMarker = "[^" + incrementIndex +"]";
-
-				doc.replaceRange(newMarker, {line: footnote.line, ch: footnote.index + footnoteMarker.length}, {line: footnote.line, ch: footnote.index + footnoteMarker.length + newMarker.length})
-			}
-		}
 	}
 }
