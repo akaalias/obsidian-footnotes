@@ -177,10 +177,9 @@ export default class MyPlugin extends Plugin {
 
 		doc.setCursor({line: doc.lineCount(), ch: footnoteDetail.length});
 
-
-
+		// Now let's go for updating...
 		// these need to be updated
-		for(var i = 0; i < footnotesAfterCursorMarkersOnly.length; i++) {
+		for(var i = 0; i <= footnotesAfterCursorMarkersOnly.length; i++) {
 
 			let footnote = footnotesAfterCursorMarkersOnly[i];
 			let theLine = doc.getLine(footnote.line);
@@ -191,11 +190,7 @@ export default class MyPlugin extends Plugin {
 				let markerIndex = Number(indexString);
 				let incrementIndex = markerIndex + 1;
 
-				console.log("Reindexing..." + markerIndex);
-
 				let newMarker = "[^" + incrementIndex +"]";
-
-				let theNewLine = theLine.replace(footnote.text, newMarker);
 
 				doc.replaceRange(newMarker, {line: footnote.line, ch: footnote.index + footnoteMarker.length}, {line: footnote.line, ch: footnote.index + footnoteMarker.length + newMarker.length})
 			}

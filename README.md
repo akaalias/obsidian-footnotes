@@ -5,8 +5,8 @@ This hotkey lets you:
 - Insert a new footnote marker (e.g. `[^1]`) with auto-incremented index in your text 
     - Adds the footnote detail (e.g. `[^1]: `) at the bottom of your text 
     - Places your cursor so you can fill in the details quickly
-- Jump from your footnote to the footnote detail
-- Jump from your footnote detail to the footnote 
+- Jump from your footnote TO the footnote detail
+- Jump from your footnote detail BACK to the footnote 
 
 ![Overview](https://github.com/akaalias/obsidian-footnotes/blob/master/basic.gif?raw=true)
 
@@ -23,10 +23,11 @@ I personally use <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd> because "6" on
 ## Default Feature Details
 ### Scenario: No previous numeric (e.g. "[^1]") footnotes exist:
 - Given my cursor is where I want a footnote to exist (e.g. `Foo bar baz▊`)
-- Then a new footnote marker (e.g. `[^1]`) is inserted where my cursor was (e.g. `Foo bar baz[^1]`)
 - When I hit `my footnote hotkey`
+- Then a new footnote marker (e.g. `[^1]`) is inserted where my cursor was (e.g. `Foo bar baz[^1]`)
 - And a new footnote details marker (e.g. `[^1]: `) is inserted on the last line of the document
 - And my cursor is now placed at the end of the detail marker (e.g. `[^1]: ▊`)
+
 ### Scenario: Previous numeric (e.g. "[^1]") footnotes exist:
 - Given there is one or more numeric footnotes in my text 
 - And my cursor is where I want a footnote to exist (e.g. `Foo bar[^1] baz▊`)
@@ -34,14 +35,22 @@ I personally use <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd> because "6" on
 - Then a new footnote marker with the next numeric index (e.g. `[^2]`) is inserted where my cursor was (e.g. `Foo bar[^1] baz[^2]`)
 - And a new footnote details marker (e.g. `[^2]: `) is inserted on the last line of the document
 - And my cursor is now placed at the end of the detail marker (e.g. `[^2]: ▊`)
-### Scenario: Jumping back to where you created the footnote
+
+### Scenario: Jumping TO a footnote detail
 - Given I'm on a footnote detail line (e.g. `[^1]: ▊`)
 - When I hit `my footnote hotkey`
 - Then my cursor is placed right after the *first* occurence of this footnote in my text (e.g. `[^1]▊`)
 
+### Scenario: Jumping BACK to a footnote
+- Given I'm on - or next to - a footnote (e.g. `[^1]▊`) in my text
+- When I hit `my footnote hotkey`
+- Then my cursor is placed to the right of the footnote (e.g. `[^1]: ▊`)
+
 ### Known Limitations or Untested Scenarios
 #### Indices are not updated
-Inserting new footnote in-between two existing footnotes will insert the next numeric index (e.g. `1, 3, 2`). It will not update the indices according to their natural order (e.g. `1, 2, 3`). 
+Inserting new footnote in-between two existing footnotes will insert the next numeric index (e.g. `1, 3, 2`). 
+
+It will NOT update the indices according to their natural order (e.g. `1, 2, 3`). 
 
 ```markdown
 Example sentence[^1] with two▊ footnotes[^2] already.
@@ -62,7 +71,7 @@ Example sentence[^1] with two[^3] footnotes[^2] already.
 
 See "Automatically Re-Index Footnotes" below for a proposed feature
 
-## Future Feature Ideas
+## Future Possible Feature Ideas
 ### Automatically Re-Index Footnotes
 Re-index and re-sort all footnotes when you insert a new one in-between one or more existing numbered footnotes:
 
@@ -125,41 +134,6 @@ Example sentence[^1] with two[^2] footnotes[^3] already.
   
   [^✝]: Details
   ```
-
-### Improved Quick Navigation
-Jumping between footnote marker (`[^1]`) and footnote details (`[^1]: My details`) should work both ways: 
-
-- Marker -> Details (Pending)
-- Details -> Marker (Available in release 0.0.3)
-
-When I'm on an existing footnote marker with my cursor, using the hotkey should place my cursor at the footnote details.
-
-#### Base Scenario
-```markdown
-Example sentence[^1▊] with footnote marker.
-
-[^1]: Foo
-```
-
-- Given my cursor is INSIDE an existing footnote marker
-- When I hit `my footnote hotkey`
-- Then my cursor is placed at the beginning of the footnote details
-
-```markdown
-Example sentence[^1] with footnote marker.
-
-[^1]: ▊Foo
-```
-
-#### Edge Cases to consider ("What if...?")
-##### What if... the cursor is BEFORE footnote marker?
-```markdown
-Example sentence▊[^1] with footnote marker.
-```
-##### What if... the cursor is NEXT to footnote marker?
-```markdown
-Example sentence[^1]▊ with footnote marker.
-```
 
 ## Background
 This plugin is based on the great idea by [jacob.4ristotle](https://forum.obsidian.md/u/jacob.4ristotle/summary) posted in the ["Footnote Shortcut"](https://forum.obsidian.md/t/footnote-shortcut/8872) thread.
