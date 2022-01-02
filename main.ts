@@ -172,16 +172,29 @@ export default class MyPlugin extends Plugin {
       { line: cursorPosition.line, ch: lineText.length }
     );
 
-    let lastLine = doc.getLine(doc.lastLine());
-    let footnoteDetail = `[^${footNoteId}]: `;
+    let lastLineIndex = doc.lastLine();
+    let lastLine = doc.getLine(lastLineIndex);
 
-    // continuing the logic of replacing the last line, we can drop the else case
-    // and just add the new line for the case that the last line isn't empty
-    if (lastLine.length > 0) {
+    while (lastLineIndex > 0) {
+      lastLine = doc.getLine(lastLineIndex);
+      if (lastLine.length > 0) {
+        doc.replaceRange(
+          "",
+          { line: lastLineIndex, ch: 0 },
+          { line: doc.lastLine(), ch: 0 }
+        );
+        break;
+      }
+      lastLineIndex--;
+    }
+
+    let footnoteDetail = `\n[^${footNoteId}]: `;
+
+    if (currentMax == 1) {
       footnoteDetail = "\n" + footnoteDetail;
     }
 
     doc.setLine(doc.lastLine(), lastLine + footnoteDetail);
-    doc.setCursor(doc.lastLine(), footnoteDetail.length - 1);
+    doc.setCursor(doc.lastLine(), footnoteDetail.length - 2);
   }
 }
