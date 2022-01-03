@@ -126,7 +126,7 @@ export default class MyPlugin extends Plugin {
             let indexMatch = lineMatch[1];
             let indexMatchNumber = Number(indexMatch);
             if (indexMatchNumber == markerIndex) {
-              doc.setCursor({ line: i, ch: lineMatch[0].length });
+              doc.setCursor({ line: i, ch: lineMatch[0].length + 1 });
               return true;
             }
           }
@@ -195,6 +195,6 @@ export default class MyPlugin extends Plugin {
     }
 
     doc.setLine(doc.lastLine(), lastLine + footnoteDetail);
-    doc.setCursor(doc.lastLine(), footnoteDetail.length - 2);
+    doc.setCursor(doc.lastLine(), footnoteDetail.length - 1);
   }
 }
