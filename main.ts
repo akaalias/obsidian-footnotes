@@ -3,6 +3,7 @@ import { MarkdownView, Plugin } from 'obsidian';
 export default class MyPlugin extends Plugin {
 
 	private detailLineRegex = /\[\^(\d+)\]\:/;
+	private reOnlyDetails = /\[\^(\d+)\]\:/gi;
 	private reOnlyMarkers = /\[\^(\d+)\]/gi;
 	private numericalRe = /(\d+)/
 
@@ -27,12 +28,11 @@ export default class MyPlugin extends Plugin {
 		const doc = mdView.sourceMode.cmEditor;
 		const cursorPosition = doc.getCursor();
 		const lineText = doc.getLine(cursorPosition.line);
-		const markdownText = mdView.data;
 
 		if (this.shouldJumpFromDetailToMarker(lineText, cursorPosition, doc)) return;
 		if (this.shouldJumpFromMarkerToDetail(lineText, cursorPosition, doc)) return;
 
-		return this.shouldCreateNewFootnote(lineText, cursorPosition, doc, markdownText);
+		return this.shouldCreateNewFootnote(lineText, cursorPosition, doc);
 	}
 
 	private shouldJumpFromDetailToMarker(lineText: string, cursorPosition: CodeMirror.Position, doc: CodeMirror.Editor) {
@@ -116,43 +116,56 @@ export default class MyPlugin extends Plugin {
 		return false;
 	}
 
-	private shouldCreateNewFootnote(lineText: string, cursorPosition: CodeMirror.Position, doc: CodeMirror.Editor, markdownText: string) {
+	private shouldCreateNewFootnote(lineText: string, cursorPosition: CodeMirror.Position, doc: CodeMirror.Editor) {
 		// create new footnote with the next numerical index
-		let matches = markdownText.match(this.reOnlyMarkers);
 		let numbers: Array<number> = [];
 		let currentMax = 1;
+		let match
 
-		if (matches != null) {
-			for (let i = 0; i <= matches.length - 1; i++) {
-				let match = matches[i];
-				match = match.replace("[^", "");
-				match = match.replace("]", "");
-				let matchNumber = Number(match);
-				numbers[i] = matchNumber;
-				if (matchNumber + 1 > currentMax) {
-					currentMax = matchNumber + 1;
-				}
+		// search highest footnote ID of footnotes before the cursor position
+		let beforeCursor = doc.getRange({line: 0, ch: 0}, doc.getCursor());
+
+		while ((match = this.reOnlyMarkers.exec(beforeCursor)) !== null) {
+			if (Number(match[1]) + 1 > currentMax) {
+				currentMax = Number(match[1]) + 1;
+			}
+		}
+		let footNoteId = currentMax;
+
+		// increment footnote IDs after the cursor position
+		// only IDs bigger or equal to the new ID will be incremented in case an earlier one is used more than once
+		// this also includes the footnote details which is fine since we need to increment those anyways
+		let afterCursor = doc.getRange(doc.getCursor(), {line: doc.lastLine(), ch: doc.getLine(doc.lastLine()).length});
+
+		while ((match = this.reOnlyMarkers.exec(afterCursor)) !== null) {
+			if (Number(match[1]) >= footNoteId) {
+				const p = doc.offsetToPos(beforeCursor.length+match.index);
+				doc.replaceRange(String(Number(match[1])+1), {line: p.line, ch: p.ch + 2}, {line: p.line, ch: p.ch + 3});
 			}
 		}
 
-		let footNoteId = currentMax;
+		// add new footnote marker
 		let footnoteMarker = `[^${footNoteId}]`;
-		let linePart1 = lineText.substr(0, cursorPosition.ch)
-		let linePart2 = lineText.substr(cursorPosition.ch);
-		let newLine = linePart1 + footnoteMarker + linePart2
+		doc.replaceRange(footnoteMarker, doc.getCursor())
 
-		doc.replaceRange(newLine, {line: cursorPosition.line, ch: 0}, {line: cursorPosition.line, ch: lineText.length})
-
-		let lastLine = doc.getLine(doc.lineCount() - 1);
-
+		// add new footnote detail
+		// search for the correct place first
 		let footnoteDetail = `[^${footNoteId}]: `;
 
-		if (lastLine.length > 0) {
-			doc.replaceRange("\n" + footnoteDetail, {line: doc.lineCount(), ch: 0})
-		} else {
-			doc.replaceRange(footnoteDetail, {line: doc.lineCount(), ch: 0})
+		while ((match = this.reOnlyDetails.exec(afterCursor)) !== null) {
+			if (Number(match[1]) == footNoteId) {
+				const p = doc.offsetToPos(beforeCursor.length + match.index + footnoteMarker.length);
+				doc.replaceRange(footnoteDetail + '\n', {line: p.line, ch: 0});
+				doc.setCursor({line: p.line, ch: footnoteDetail.length});
+				return;
+			}
 		}
-
-		doc.setCursor({line: doc.lineCount(), ch: footnoteDetail.length});
+		// if no footnote details where found just add a line to the bottom of the document
+		if (footNoteId == 1) {
+			// this is just for aesthetics 
+			doc.replaceRange('\n', {line: doc.lastLine(), ch: doc.getLine(doc.lastLine()).length});
+		}
+		doc.replaceRange('\n' + footnoteDetail, {line: doc.lastLine(), ch: doc.getLine(doc.lastLine()).length});
+		doc.setCursor({line: doc.lastLine(), ch: footnoteDetail.length});
 	}
 }
